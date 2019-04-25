@@ -18,32 +18,28 @@ function activate(context) {
     const selectedVar = document.getText(selection);
     const lineOfSelectedVar = selection.active.line;
     // Check if the selection line is not the last one in the document and the selected variable is not empty
-    if (
-      !(lineOfSelectedVar === document.lineCount - 1) &&
-      selectedVar.trim().length !== 0
-    ) {
-      editor.edit(editBuilder => {
-        const config = vscode.workspace.getConfiguration("turboConsoleLog");
-        const wrapLogMessage = config.wrapLogMessage || false;
-        const logMessagePrefix = config.logMessagePrefix;
-        const quote = config.quote;
-        const addSemicolonInTheEnd = config.addSemicolonInTheEnd || false;
 
-        editBuilder.insert(
-          new vscode.Position(lineOfSelectedVar + 1, 0),
-          logMessage.message(
-            document,
-            selectedVar,
-            lineOfSelectedVar,
-            wrapLogMessage,
-            logMessagePrefix,
-            quote,
-            addSemicolonInTheEnd,
-            tabSize
-          )
-        );
-      });
-    }
+    editor.edit(editBuilder => {
+      const config = vscode.workspace.getConfiguration("turboConsoleLog");
+      const wrapLogMessage = config.wrapLogMessage || false;
+      const logMessagePrefix = config.logMessagePrefix;
+      const quote = config.quote;
+      const addSemicolonInTheEnd = config.addSemicolonInTheEnd || false;
+
+      editBuilder.insert(
+        new vscode.Position(lineOfSelectedVar + 1, 0),
+        logMessage.message(
+          document,
+          selectedVar || '',
+          lineOfSelectedVar,
+          wrapLogMessage,
+          logMessagePrefix,
+          quote,
+          addSemicolonInTheEnd,
+          tabSize
+        )
+      );
+    });
   });
   vscode.commands.registerCommand(
     "turboConsoleLog.commentAllLogMessages",
